@@ -71,7 +71,7 @@ def get_image_download_link(img, filename, text):
     return href
 
 # Streamlit app
-st.title("Image Encryption for Secure Internet Transfer")
+st.subheader("Image Encryption for Secure Internet Transfer")
 st.write("Timi K Frnd")
 
 # Sidebar for options
