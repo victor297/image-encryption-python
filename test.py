@@ -6,6 +6,7 @@ from Crypto.Random import get_random_bytes
 from PIL import Image
 import io
 import base64
+import time
 
 # Function to encrypt an image
 def encrypt_image(image, key, mode):
@@ -93,11 +94,28 @@ if option == "Encrypt":
         if st.button("Encrypt Image"):
             if key:
                 try:
+                    start_time = time.time()
                     imageEncrypted, iv = encrypt_image(image, key, mode)
+                    end_time = time.time()
+                    encryption_time = end_time - start_time
+
                     st.image(imageEncrypted, caption='Encrypted Image', use_column_width=True)
                     st.session_state['imageEncrypted'] = imageEncrypted
                     st.session_state['key'] = key
                     st.session_state['iv'] = iv
+
+                    # Metrics display
+                    st.subheader("Encryption Metrics")
+                    st.write(f"**Encryption Time:** {encryption_time:.4f} seconds")
+                    st.write(f"**Original Image Size:** {image.nbytes / 1024:.2f} KB")
+                    st.write(f"**Encrypted Image Size:** {imageEncrypted.nbytes / 1024:.2f} KB")
+
+                    # Histogram of pixel values
+                    st.subheader("Pixel Value Histogram")
+                    st.write("**Original Image:**")
+                    st.bar_chart(np.histogram(image.flatten(), bins=256)[0])
+                    st.write("**Encrypted Image:**")
+                    st.bar_chart(np.histogram(imageEncrypted.flatten(), bins=256)[0])
 
                     # Save encrypted image
                     encrypted_image_pil = Image.fromarray(imageEncrypted)
@@ -115,9 +133,6 @@ if option == "Encrypt":
                     mail_ul="https://mail.google.com/mail/u/0/#inbox?compose=new"
                     WhatsApp="https://api.whatsapp.com/send?text=hi%20i%20want%20to%20send%20you%20a%20an%20image%20now%20and%20the%20code%20to%20open%20it"
                     st.markdown(f"[Share on WhatsApp]({WhatsApp})", unsafe_allow_html=True)
-                    # st.markdown(f"[Share on Facebook]({facebook_url})", unsafe_allow_html=True)
-                    # st.markdown(f"[Share on Twitter]({twitter_url})", unsafe_allow_html=True)
-                    # st.markdown(f"[Share on Instagram]({instagram_url})", unsafe_allow_html=True)
                     st.markdown(f"[Share via Email]({mail_ul})", unsafe_allow_html=True)
 
                     # Stop running the page after encryption is done
