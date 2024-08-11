@@ -8,7 +8,7 @@ import io
 import base64
 import time
 
-# Function to encrypt an image
+# Function to encrypt an image yh
 def encrypt_image(image, key, mode):
     keySize = 32
     ivSize = AES.block_size if mode == AES.MODE_CBC else 0
